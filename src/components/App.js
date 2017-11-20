@@ -1,5 +1,5 @@
 import React from "react";
-import { AuthProvider } from "./Auth";
+import { AuthProvider, LogoutButton, LoginButton } from "./Auth";
 import {
   ChatProvider,
   ChatMessages,
@@ -15,12 +15,17 @@ class App extends React.Component {
   render() {
     return (
       <div>
+        {this.props.username ? (
+          <LogoutButton logout={this.props.logout} />
+        ) : (
+          <LoginButton login={this.props.login} />
+        )}
         <p>{this.props.username}</p>
-        <ChatProvider>
+        <ChatProvider username={this.props.username}>
           <ChatMessages />
           <ChatForm>
-            <ChatInput />
-            <ChatSubmit />
+            <ChatInput disabled={this.props.username === null} />
+            <ChatSubmit disabled={this.props.username === null} />
           </ChatForm>
         </ChatProvider>
       </div>

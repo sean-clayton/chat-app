@@ -11,24 +11,32 @@ export class ChatMessages extends React.Component {
   }
   async componentDidMount() {
     const { data: { data: messages } } = await this.props.getMessages();
-
     this.setState({
       messages
     });
   }
   render() {
     return (
-      <pre>
-        <code>{JSON.stringify(this.state.messages, null, 2)}</code>
-      </pre>
+      <ul>
+        {this.state.messages.map(msg => (
+          <li key={msg.id}>
+            {msg.attributes.message} {msg.attributes.created_at}
+          </li>
+        ))}
+      </ul>
     );
   }
 }
 
-export const ChatSubmit = () => <button type="submit">Submit</button>;
+export const ChatSubmit = props => (
+  <button type="submit" {...props}>
+    Submit
+  </button>
+);
 
-export const ChatInput = ({ message, updateMessage }) => (
+export const ChatInput = ({ message, updateMessage, ...props }) => (
   <input
+    {...props}
     name="message"
     type="text"
     value={message}
@@ -89,17 +97,21 @@ export class ChatProvider extends React.Component {
   getMessages = async () => axios.get(`${API_ENDPOINT}/messages`);
   render() {
     const children = React.Children.map(this.props.children, child => {
-      switch (child.type) {
-        case ChatMessages:
-          return React.cloneElement(child, {
-            getMessages: this.getMessages
-          });
-        case ChatForm:
-          return React.cloneElement(child, {
-            sendMessage: this.sendMessage
-          });
-        default:
-          return child;
+      if (child) {
+        switch (child.type) {
+          case ChatMessages:
+            return React.cloneElement(child, {
+              getMessages: this.getMessages
+            });
+          case ChatForm:
+            return React.cloneElement(child, {
+              sendMessage: this.sendMessage
+            });
+          default:
+            return child;
+        }
+      } else {
+        return null;
       }
     });
     return <div>{children}</div>;

@@ -2,6 +2,14 @@ import React from "react";
 import axios from "axios";
 import { API_ENDPOINT } from "../constants";
 
+export const LogoutButton = ({ logout }) => (
+  <button onClick={() => logout()}>Logout</button>
+);
+
+export const LoginButton = ({ login }) => (
+  <button onClick={() => login()}>Login</button>
+);
+
 export class AuthProvider extends React.Component {
   constructor() {
     super();
