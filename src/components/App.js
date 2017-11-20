@@ -1,33 +1,29 @@
-import React, { Component } from "react";
+import React from "react";
 import axios from "axios";
 import { API_ENDPOINT } from "../constants";
+import { AuthProvider } from "./Auth";
 import { ChatProvider, ChatMessages } from "./Chat";
 
-class App extends Component {
-  constructor() {
-    super();
-    this.state = {
-      username: null
-    };
-  }
+class AppWrapper extends React.Component {
   async componentDidMount() {
-    const {
-      data: { included: [{ attributes: { username } }] }
-    } = await axios.post(`${API_ENDPOINT}/sessions`);
-
-    this.setState({
-      username
-    });
+    await this.props.login();
   }
   render() {
+    const { username } = this.props;
     return (
       <div>
-        <p>{this.state.username}</p>
+        <p>{username}</p>
         <ChatProvider>
           <ChatMessages />
         </ChatProvider>
       </div>
     );
+  }
+}
+
+class App extends React.Component {
+  render() {
+    return <AuthProvider render={authUtils => <AppWrapper {...authUtils} />} />;
   }
 }
 
