@@ -31,13 +31,17 @@ export class AuthProvider extends React.Component {
       username: null
     });
   };
+  componentWillMount() {
+    if (!this.props.render && !this.props.children) {
+      throw new Error("A render prop or child must be provided!");
+    }
+  }
   render() {
-    return (
-      this.props.render({
-        login: this.login,
-        logout: this.logout,
-        username: this.state.username
-      }) || null
-    );
+    const render = this.props.render || this.props.children;
+    return render({
+      login: this.login,
+      logout: this.logout,
+      username: this.state.username
+    });
   }
 }
