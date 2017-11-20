@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import axios from "axios";
 import { API_ENDPOINT } from "../constants";
-import Messages from "./Messages";
+import { ChatProvider, ChatMessages } from "./Chat";
 
 class App extends Component {
   constructor() {
@@ -23,7 +23,9 @@ class App extends Component {
     return (
       <div>
         <p>{this.state.username}</p>
-        <Messages />
+        <ChatProvider>
+          <ChatMessages />
+        </ChatProvider>
       </div>
     );
   }
