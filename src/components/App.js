@@ -1,8 +1,12 @@
 import React from "react";
-import axios from "axios";
-import { API_ENDPOINT } from "../constants";
 import { AuthProvider } from "./Auth";
-import { ChatProvider, ChatMessages } from "./Chat";
+import {
+  ChatProvider,
+  ChatMessages,
+  ChatForm,
+  ChatInput,
+  ChatSubmit
+} from "./Chat";
 
 class App extends React.Component {
   async componentDidMount() {
@@ -14,6 +18,10 @@ class App extends React.Component {
         <p>{this.props.username}</p>
         <ChatProvider>
           <ChatMessages />
+          <ChatForm>
+            <ChatInput />
+            <ChatSubmit />
+          </ChatForm>
         </ChatProvider>
       </div>
     );
