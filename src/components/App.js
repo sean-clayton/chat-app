@@ -23,9 +23,9 @@ class App extends React.Component {
         <p>{this.props.username}</p>
         <ChatProvider username={this.props.username}>
           <ChatMessages />
-          <ChatForm>
-            <ChatInput disabled={this.props.username === null} />
-            <ChatSubmit disabled={this.props.username === null} />
+          <ChatForm disabled={this.props.username === null}>
+            <ChatInput />
+            <ChatSubmit />
           </ChatForm>
         </ChatProvider>
       </div>

@@ -70,7 +70,12 @@ export class ChatForm extends React.Component {
         case ChatInput:
           return React.cloneElement(child, {
             message: this.state.message,
-            updateMessage: this.updateMessage
+            updateMessage: this.updateMessage,
+            disabled: this.props.disabled
+          });
+        case ChatSubmit:
+          return React.cloneElement(child, {
+            disabled: this.props.disabled
           });
         default:
           return child;
