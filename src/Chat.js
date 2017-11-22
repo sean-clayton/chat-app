@@ -148,11 +148,6 @@ export class ChatForm extends React.Component {
       sending: false
     });
   };
-  updateMessage = message => {
-    this.setState({
-      message
-    });
-  };
   render() {
     const children = React.Children.map(this.props.children, child => {
       switch (child.type) {
