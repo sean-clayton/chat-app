@@ -4,6 +4,8 @@ import axios from "axios";
 import format from "date-fns/fp/format";
 import { API_ENDPOINT } from "./constants";
 
+// Components just for styles
+
 const Input = g.input(
   {
     flex: 1,
@@ -66,6 +68,8 @@ const ChatBubble = g.span({
   cursor: "default"
 });
 
+// Components ready for consumption
+
 export const ChatMessage = ({ message: { attributes: { message, created_at } } }) => (
   <Li
     css={{
@@ -89,6 +93,8 @@ export const ChatSubmit = props => (
 export const ChatInput = ({ message, updateMessage, ...props }) => (
   <Input {...props} name="message" type="text" autoComplete="off" />
 );
+
+// Components that handle business logic
 
 export class ChatMessages extends React.Component {
   state = {

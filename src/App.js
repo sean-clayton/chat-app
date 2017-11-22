@@ -36,7 +36,6 @@ class App extends React.Component {
   async componentDidMount() {
     await this.props.login();
   }
-
   render() {
     return (
       <MainContent>
