@@ -11,12 +11,10 @@ export const LoginButton = ({ login }) => (
 );
 
 export class AuthProvider extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      username: null
-    };
-  }
+  state = {
+    username: null
+  };
+
   login = async () => {
     const {
       data: { included: [{ attributes: { username } }] }

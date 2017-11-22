@@ -3,12 +3,10 @@ import axios from "axios";
 import { API_ENDPOINT } from "../constants";
 
 export class ChatMessages extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      messages: []
-    };
-  }
+  state = {
+    messages: []
+  };
+
   async componentDidMount() {
     const { data: { data: messages } } = await this.props.getMessages();
     this.setState({
@@ -45,12 +43,10 @@ export const ChatInput = ({ message, updateMessage, ...props }) => (
 );
 
 export class ChatForm extends React.Component {
-  constructor() {
-    super();
-    this.state = {
-      message: ""
-    };
-  }
+  state = {
+    message: ""
+  };
+
   submitHandler = async e => {
     e.preventDefault();
     const message = this.state.message;
