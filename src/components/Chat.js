@@ -1,6 +1,54 @@
 import React from "react";
+import g from "glamorous";
 import axios from "axios";
 import { API_ENDPOINT } from "../constants";
+
+const Input = g.input({
+  flex: 1,
+  padding: "0.75em 1.25em",
+  borderRadius: "9999px",
+  border: "none",
+  boxShadow: "0 .25em .25em rgba(0,0,0,.1)",
+  transition: ".1s ease box-shadow",
+  ":hover": {
+    boxShadow: "0 .5em .5em rgba(0,0,0,.05)"
+  }
+});
+
+const Button = g.button({
+  color: "rgba(0,0,0,.75)",
+  padding: "0.75em 1.25em",
+  border: "none",
+  borderRadius: "9999px",
+  backgroundColor: "#0d6",
+  cursor: "pointer"
+});
+
+const ChatFormWrapper = g.form({
+  display: "flex",
+  justifyContent: "space-between",
+  padding: "1em",
+  backgroundColor: "rgba(255,255,255,.5)",
+  borderRadius: "0 0 .25em .25em",
+  boxShadow: "inset 0 1px 0 rgba(0,0,0,.1)"
+});
+
+export const ChatSubmit = props => (
+  <Button type="submit" {...props}>
+    Submit
+  </Button>
+);
+
+export const ChatInput = ({ message, updateMessage, ...props }) => (
+  <Input
+    {...props}
+    name="message"
+    type="text"
+    value={message}
+    autoComplete="off"
+    onChange={e => updateMessage(e.target.value)}
+  />
+);
 
 export class ChatMessages extends React.Component {
   state = {
@@ -14,39 +62,14 @@ export class ChatMessages extends React.Component {
     });
   }
   render() {
-    return (
-      <ul>
-        {this.state.messages.map(msg => (
-          <li key={msg.id}>
-            {msg.attributes.message} {msg.attributes.created_at}
-          </li>
-        ))}
-      </ul>
-    );
+    return this.props.render(this.state.messages);
   }
 }
-
-export const ChatSubmit = props => (
-  <button type="submit" {...props}>
-    Submit
-  </button>
-);
-
-export const ChatInput = ({ message, updateMessage, ...props }) => (
-  <input
-    {...props}
-    name="message"
-    type="text"
-    value={message}
-    onChange={e => updateMessage(e.target.value)}
-  />
-);
 
 export class ChatForm extends React.Component {
   state = {
     message: ""
   };
-
   submitHandler = async e => {
     e.preventDefault();
     const message = this.state.message;
@@ -65,19 +88,25 @@ export class ChatForm extends React.Component {
       switch (child.type) {
         case ChatInput:
           return React.cloneElement(child, {
+            ...child.props,
             message: this.state.message,
             updateMessage: this.updateMessage,
             disabled: this.props.disabled
           });
         case ChatSubmit:
           return React.cloneElement(child, {
+            ...child.props,
             disabled: this.props.disabled
           });
         default:
           return child;
       }
     });
-    return <form onSubmit={this.submitHandler}>{children}</form>;
+    return (
+      <ChatFormWrapper onSubmit={this.submitHandler}>
+        {children}
+      </ChatFormWrapper>
+    );
   }
 }
 
@@ -115,6 +144,6 @@ export class ChatProvider extends React.Component {
         return null;
       }
     });
-    return <div>{children}</div>;
+    return children;
   }
 }
