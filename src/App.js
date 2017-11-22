@@ -1,15 +1,7 @@
 import React from "react";
-import g, { Ul } from "glamorous";
+import g from "glamorous";
 import { AuthProvider } from "./Auth";
-import {
-  ChatProvider,
-  ChatMessages,
-  ChatForm,
-  ChatInput,
-  ChatSubmit,
-  ChatList,
-  ChatMessage
-} from "./Chat";
+import { ChatProvider, ChatMessages, ChatForm, ChatInput, ChatSubmit, ChatList, ChatMessage } from "./Chat";
 
 const MainContent = g.main({
   display: "flex",
@@ -48,27 +40,19 @@ class App extends React.Component {
   render() {
     return (
       <MainContent>
-        <AppHeader>
-          {this.props.username ? this.props.username : "Logging In..."}
-        </AppHeader>
+        <AppHeader>{this.props.username ? this.props.username : "Logging In..."}</AppHeader>
         <ChatProvider username={this.props.username}>
           <ChatMessages
             render={messages =>
               messages.length ? (
-                <ChatList>
-                  {messages.map(msg => (
-                    <ChatMessage key={msg.id} message={msg} />
-                  ))}
-                </ChatList>
+                <ChatList>{messages.map(msg => <ChatMessage key={msg.id} message={msg} />)}</ChatList>
               ) : (
                 <MessagesLoading>Loading Messages...</MessagesLoading>
               )
             }
           />
           <ChatForm disabled={this.props.username === null}>
-            <ChatInput
-              placeholder={this.props.username ? "Type here" : "Logging In..."}
-            />
+            <ChatInput placeholder={this.props.username ? "Type here" : "Logging In..."} />
             <ChatSubmit cta css={{ marginLeft: "1em" }} />
           </ChatForm>
         </ChatProvider>
@@ -77,6 +61,4 @@ class App extends React.Component {
   }
 }
 
-export default () => (
-  <AuthProvider render={authUtils => <App {...authUtils} />} />
-);
+export default () => <AuthProvider render={authUtils => <App {...authUtils} />} />;

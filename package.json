@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "axios": "^0.17.1",
+    "date-fns": "^2.0.0-alpha.7",
     "glamor": "^2.20.40",
     "glamorous": "^4.11.0",
     "react": "^16.1.1",
@@ -19,5 +20,8 @@
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "fmt": "prettier --write 'src/**/*.js'"
+  },
+  "prettier": {
+    "printWidth": 120
   }
 }

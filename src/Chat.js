@@ -1,33 +1,40 @@
 import React from "react";
-import g from "glamorous";
+import g, { Li } from "glamorous";
 import axios from "axios";
-import { API_ENDPOINT } from "../constants";
+import format from "date-fns/fp/format";
+import { API_ENDPOINT } from "./constants";
 
-const Input = g.input({
-  flex: 1,
-  padding: "0.75em 1.25em",
-  borderRadius: "9999px",
-  border: "2px solid #ddd",
-  boxShadow: "0 0 0 transparent",
-  transition: ".1s ease box-shadow",
-  ":hover": {
-    boxShadow: "0 .5em .5em rgba(0,0,0,.05)"
+const Input = g.input(
+  {
+    flex: 1,
+    padding: "0.75em 1.25em",
+    borderRadius: "9999px",
+    border: "2px solid #ddd",
+    boxShadow: "0 0 0 transparent",
+    transition: ".1s ease box-shadow",
+    ":hover": {
+      boxShadow: "0 .5em .5em rgba(0,0,0,.05)"
+    },
+    ":focus": {
+      outline: "none",
+      border: "2px solid #7cf",
+      boxShadow: "0 .5em .5em rgba(0,0,0,.05)"
+    }
   },
-  ":focus": {
-    border: "2px solid #7cf",
-    boxShadow: "0 .5em .5em rgba(0,0,0,.05)"
-  }
-});
+  ({ disabled }) => ({
+    cursor: disabled ? "not-allowed" : "text"
+  })
+);
 
 const Button = g.button(
   {
     padding: "0.75em 1.25em",
     border: "none",
     borderRadius: "9999px",
-    color: "#fff",
-    cursor: "pointer"
+    color: "#fff"
   },
   ({ disabled }) => ({
+    cursor: disabled ? "not-allowed" : "pointer",
     backgroundColor: disabled ? "#ddd" : "#0d6"
   })
 );
@@ -41,20 +48,36 @@ const ChatFormWrapper = g.form({
   boxShadow: "inset 0 1px 0 rgba(0,0,0,.1)"
 });
 
-// const ChatMessage
-
 export const ChatList = g.ul({
   backgroundColor: "#fff",
   display: "flex",
-  flex: 1
+  flex: 1,
+  flexDirection: "column",
+  padding: "0 1em"
 });
 
-export const ChatMessage = ({
-  message: { attributes: { message, created_at } }
-}) => (
-  <li>
-    {message} {created_at}
-  </li>
+const ChatBubble = g.span({
+  display: "inline-block",
+  borderRadius: "0 1em 1em 1em",
+  backgroundColor: "#07f",
+  padding: "1em",
+  color: "#fff",
+  maxWidth: "50%",
+  cursor: "default"
+});
+
+export const ChatMessage = ({ message: { attributes: { message, created_at } } }) => (
+  <Li
+    css={{
+      padding: "1em 0"
+    }}
+  >
+    <ChatBubble>{message}</ChatBubble>
+    <br />
+    <time style={{ color: "rgba(0,0,0,.5)", fontSize: ".7em", cursor: "default" }}>
+      {format("MMM D, YYYY [at] h:mma")(new Date(Date.parse(created_at)))}
+    </time>
+  </Li>
 );
 
 export const ChatSubmit = props => (
@@ -64,14 +87,7 @@ export const ChatSubmit = props => (
 );
 
 export const ChatInput = ({ message, updateMessage, ...props }) => (
-  <Input
-    {...props}
-    name="message"
-    type="text"
-    value={message}
-    autoComplete="off"
-    onChange={e => updateMessage(e.target.value)}
-  />
+  <Input {...props} name="message" type="text" autoComplete="off" />
 );
 
 export class ChatMessages extends React.Component {
@@ -92,15 +108,18 @@ export class ChatMessages extends React.Component {
 
 export class ChatForm extends React.Component {
   state = {
-    message: ""
+    sending: false
   };
   submitHandler = async e => {
     e.preventDefault();
-    const message = this.state.message;
     this.setState({
-      message: ""
+      sending: true
     });
-    await this.props.sendMessage(message);
+    e.target.reset();
+    await this.props.sendMessage(e.target.message.value);
+    this.setState({
+      sending: false
+    });
   };
   updateMessage = message => {
     this.setState({
@@ -113,24 +132,18 @@ export class ChatForm extends React.Component {
         case ChatInput:
           return React.cloneElement(child, {
             ...child.props,
-            message: this.state.message,
-            updateMessage: this.updateMessage,
             disabled: this.props.disabled
           });
         case ChatSubmit:
           return React.cloneElement(child, {
             ...child.props,
-            disabled: this.props.disabled
+            disabled: this.props.disabled || this.state.sending
           });
         default:
           return child;
       }
     });
-    return (
-      <ChatFormWrapper onSubmit={this.submitHandler}>
-        {children}
-      </ChatFormWrapper>
-    );
+    return <ChatFormWrapper onSubmit={this.submitHandler}>{children}</ChatFormWrapper>;
   }
 }
 

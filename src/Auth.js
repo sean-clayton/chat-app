@@ -1,15 +1,13 @@
 import React from "react";
 import axios from "axios";
-import { API_ENDPOINT } from "../constants";
+import { API_ENDPOINT } from "./constants";
 
 export class AuthProvider extends React.Component {
   state = {
     username: null
   };
   login = async () => {
-    const {
-      data: { included: [{ attributes: { username } }] }
-    } = await axios.post(`${API_ENDPOINT}/sessions`);
+    const { data: { included: [{ attributes: { username } }] } } = await axios.post(`${API_ENDPOINT}/sessions`);
 
     this.setState({
       username
