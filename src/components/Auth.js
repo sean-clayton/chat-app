@@ -6,7 +6,6 @@ export class AuthProvider extends React.Component {
   state = {
     username: null
   };
-
   login = async () => {
     const {
       data: { included: [{ attributes: { username } }] }
@@ -14,11 +13,6 @@ export class AuthProvider extends React.Component {
 
     this.setState({
       username
-    });
-  };
-  logout = () => {
-    this.setState({
-      username: null
     });
   };
   componentWillMount() {
@@ -30,7 +24,6 @@ export class AuthProvider extends React.Component {
     const render = this.props.render || this.props.children;
     return render({
       login: this.login,
-      logout: this.logout,
       username: this.state.username
     });
   }

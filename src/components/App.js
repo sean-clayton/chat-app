@@ -6,7 +6,9 @@ import {
   ChatMessages,
   ChatForm,
   ChatInput,
-  ChatSubmit
+  ChatSubmit,
+  ChatList,
+  ChatMessage
 } from "./Chat";
 
 const MainContent = g.main({
@@ -14,16 +16,28 @@ const MainContent = g.main({
   flexDirection: "column",
   border: "1px solid rgba(0,0,0,.1)",
   borderRadius: ".25em",
-  minHeight: "24em",
-  minWidth: "24em"
+  height: "100%",
+  width: "100%",
+  maxHeight: "32em",
+  maxWidth: "48em",
+  boxShadow: "0 1.5em 2em rgba(0,0,0,.05)"
 });
 
-const ChatHeader = g.header({
+const AppHeader = g.header({
   backgroundColor: "#07f",
   color: "#fff",
   padding: "1em",
   borderRadius: ".25em .25em 0 0",
   boxShadow: "inset 0 -1px 0 rgba(0,0,0,.1)"
+});
+
+const MessagesLoading = g.div({
+  flex: 1,
+  display: "flex",
+  justifyContent: "center",
+  alignItems: "center",
+  backgroundColor: "#fafafa",
+  color: "#aaa"
 });
 
 class App extends React.Component {
@@ -34,27 +48,22 @@ class App extends React.Component {
   render() {
     return (
       <MainContent>
-        <ChatHeader>
+        <AppHeader>
           {this.props.username ? this.props.username : "Logging In..."}
-        </ChatHeader>
+        </AppHeader>
         <ChatProvider username={this.props.username}>
           <ChatMessages
-            render={messages => (
-              <Ul
-                css={{
-                  display: "flex",
-                  flex: 1
-                }}
-              >
-                {messages.length
-                  ? messages.map(msg => (
-                      <li key={msg.id}>
-                        {msg.attributes.message} {msg.attributes.created_at}
-                      </li>
-                    ))
-                  : "Loading messages..."}
-              </Ul>
-            )}
+            render={messages =>
+              messages.length ? (
+                <ChatList>
+                  {messages.map(msg => (
+                    <ChatMessage key={msg.id} message={msg} />
+                  ))}
+                </ChatList>
+              ) : (
+                <MessagesLoading>Loading Messages...</MessagesLoading>
+              )
+            }
           />
           <ChatForm disabled={this.props.username === null}>
             <ChatInput

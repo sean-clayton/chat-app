@@ -7,22 +7,30 @@ const Input = g.input({
   flex: 1,
   padding: "0.75em 1.25em",
   borderRadius: "9999px",
-  border: "none",
-  boxShadow: "0 .25em .25em rgba(0,0,0,.1)",
+  border: "2px solid #ddd",
+  boxShadow: "0 0 0 transparent",
   transition: ".1s ease box-shadow",
   ":hover": {
+    boxShadow: "0 .5em .5em rgba(0,0,0,.05)"
+  },
+  ":focus": {
+    border: "2px solid #7cf",
     boxShadow: "0 .5em .5em rgba(0,0,0,.05)"
   }
 });
 
-const Button = g.button({
-  color: "rgba(0,0,0,.75)",
-  padding: "0.75em 1.25em",
-  border: "none",
-  borderRadius: "9999px",
-  backgroundColor: "#0d6",
-  cursor: "pointer"
-});
+const Button = g.button(
+  {
+    padding: "0.75em 1.25em",
+    border: "none",
+    borderRadius: "9999px",
+    color: "#fff",
+    cursor: "pointer"
+  },
+  ({ disabled }) => ({
+    backgroundColor: disabled ? "#ddd" : "#0d6"
+  })
+);
 
 const ChatFormWrapper = g.form({
   display: "flex",
@@ -32,6 +40,22 @@ const ChatFormWrapper = g.form({
   borderRadius: "0 0 .25em .25em",
   boxShadow: "inset 0 1px 0 rgba(0,0,0,.1)"
 });
+
+// const ChatMessage
+
+export const ChatList = g.ul({
+  backgroundColor: "#fff",
+  display: "flex",
+  flex: 1
+});
+
+export const ChatMessage = ({
+  message: { attributes: { message, created_at } }
+}) => (
+  <li>
+    {message} {created_at}
+  </li>
+);
 
 export const ChatSubmit = props => (
   <Button type="submit" {...props}>
