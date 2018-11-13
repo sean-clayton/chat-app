@@ -4,27 +4,6 @@ import axios from "axios";
 import format from "date-fns/fp/format";
 import { API_ENDPOINT } from "./constants";
 
-/*
-
-  In a larger project I tend to like to break up my components into a folder
-  structure that resembles atomic design [0]
-
-  Components
-    - Atoms
-    - Molecules
-    - Organisms
-    - Templates/Layouts
-    - Pages
-  
-  That kind of structure is overkill for a tiny little thing like this, so I'm
-  just putting all of that stuff in here.
-
-
-
-  [0]: http://bradfrost.com/blog/post/atomic-web-design/
-
-*/
-
 // Components just for styles
 
 const Input = g.input(
